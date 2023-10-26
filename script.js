@@ -1,33 +1,35 @@
-const responses = {
-"hello": "Hello! How can I assist you today?",
-"hi": "Hi there! What can I help you with?",
-"how are you": "I'm just a bot, but I'm here to assist you. What do you need?",
-"what's your name": "I'm just a chatbot, so I don't have a name. You can call me Chatbot!",
-"bye": "Goodbye! If you have more questions in the future, feel free to ask.",
-};
-
-function sendMessage() {
-const userInput = document.getElementById('userInput');
+document.addEventListener('DOMContentLoaded', function() {
 const chatbox = document.getElementById('chatbox');
+const userInput = document.getElementById('userInput');
+const sendButton = document.getElementById('sendButton');
 
-const userMessage = userInput.value;
-userInput.value = '';
+sendButton.addEventListener('click', function() {
+    const userMessage = userInput.value;
+    if (userMessage.trim() !== '') {
+    addMessage('You', userMessage, 'user-message');
+    const botResponse = getBotResponse(userMessage.toLowerCase());
+    addMessage('Bot', botResponse, 'bot-message');
+    userInput.value = '';
+    }
+});
 
-chatbox.innerHTML += '<div class="chat-message user-message">You: ' + userMessage + '</div>';
-
-  // Normalize user input and find a response
-const botResponse = getBotResponse(userMessage.toLowerCase());
-
-chatbox.innerHTML += '<div class="chat-message bot-message">Bot: ' + botResponse + '</div>';
-chatbox.scrollTop = chatbox.scrollHeight;
+function addMessage(sender, message, messageClass) {
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('chat-message', messageClass);
+    messageContainer.innerHTML = sender + ': ' + message;
+    chatbox.appendChild(messageContainer);
+    chatbox.scrollTop = chatbox.scrollHeight;
 }
 
-function getBotResponse(userInput) {
-for (const key in responses) {
-    if (userInput.includes(key)) {
-    return responses[key];
+function getBotResponse(userMessage) {
+    if (userMessage.includes('hello') || userMessage.includes('hi')) {
+    return 'Hello there!';
+    } else if (userMessage.includes('how are you')) {
+    return 'I am just a bot, but I am functioning well. How can I assist you?';
+    } else if (userMessage.includes('bye')) {
+    return 'Goodbye! Have a great day!';
+    } else {
+    return 'I didn\'t quite understand that. Could you please rephrase your message?';
     }
 }
-
-return "I'm not sure how to respond to that. Could you please rephrase your message?";
-}
+});
