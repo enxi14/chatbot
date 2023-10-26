@@ -21,13 +21,21 @@ function addMessage(sender, message, messageClass) {
     chatbox.scrollTop = chatbox.scrollHeight;
 }
 
+const net = new brain.recurrent.LSTM();
+
+const trainingData = [
+    { input: 'hello', output: 'Hello there!' },
+    { input: 'hi', output: 'Hi! How can I help you?' },
+    { input: 'how are you', output: 'I am just a bot, but I am functioning well. How can I assist you?' },
+    { input: 'bye', output: 'Goodbye! Have a great day!' },
+];
+
+net.train(trainingData, { iterations: 2000 });
+
 function getBotResponse(userMessage) {
-    if (userMessage.includes('hello') || userMessage.includes('hi')) {
-    return 'Hello there!';
-    } else if (userMessage.includes('how are you')) {
-    return 'I am just a bot, but I am functioning well. How can I assist you?';
-    } else if (userMessage.includes('bye')) {
-    return 'Goodbye! Have a great day!';
+    const output = net.run(userMessage);
+    if (output) {
+    return output;
     } else {
     return 'I didn\'t quite understand that. Could you please rephrase your message?';
     }
